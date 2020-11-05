@@ -1,6 +1,9 @@
 # shaderc_poll
 Compile shader files and poll for changes. Continuous integration shader compiler.
 
+## Description
+```shaderc_poll``` is useful for batch shader compilation. It was written to streamline the process of writing and compiling shaders without having to add a nasty post-build step. It searches a given directory for shader files, compiles them and places successfully compiled files into the specified output location. It provides syntax coloring for errors and warnings and the ability to match the output directory file tree.
+
 ## Usage
 ```
 shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] [-errors | -warnings | -woff] [-colors] [-recursive] [-showcmd] [-force] [-cpd=on|off] [-outext=***] [-ex**=**] [-- [shaderc_arg1] [shaderc_arg2]]
@@ -63,5 +66,9 @@ Included ```sp.bat``` and ```sp.sh``` files that you can modify to easily run sh
 * (Shaderc (by Google))[https://github.com/google/shaderc]
 * CMake
 
+## Future Additions
+* Allow users to specify multiple input folders.
 
+## Screenshot
+![Screenshot](https://github.com/metalmario971/shaderc_poll/blob/master/screenshot.png)
 

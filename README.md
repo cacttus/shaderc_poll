@@ -6,7 +6,9 @@ Compile shader files and poll for changes. Continuous integration shader compile
 
 ## Usage
 ```
-shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] [-errors | -warnings | -woff] [-colors] [-recursive] [-showcmd] [-force] [-cpd=on|off] [-outext=***] [-ex**=**] [-- [shaderc_arg1] [shaderc_arg2]]
+shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] 
+[-errors | -warnings | -woff] [-colors] [-recursive] [-showcmd] [-force] 
+[-cpd=on|off] [-outext=***] [-ex**=**] [-- [shaderc_arg1] [shaderc_arg2]]
 ```
 
 ### Arguments

@@ -2,7 +2,7 @@
 Compile shader files and poll for changes. Continuous integration shader compiler.
 
 ## Description
-```shaderc_poll``` is written to streamline the process of writing and compiling shaders without having to add a nasty post-build step. It searches a given directory for shader files, compiles them and places successfully compiled files into the specified output location. It provides syntax coloring for errors and warnings and the ability to match the output directory file tree. The program identifies shader types by their extension (.vs=vertex,.fs=fragment) this is also customizable.
+```shaderc_poll``` streamlines the process of writing and compiling shaders. It searches a given directory for shader files, compiles them and places successfully compiled files into the specified output location. It provides syntax coloring for errors and warnings and the ability to match the output directory file tree. The program identifies shader types by their extension (.vs=vertex,.fs=fragment) this is also customizable.
 
 ## Usage
 ```

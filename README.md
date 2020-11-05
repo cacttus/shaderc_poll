@@ -49,19 +49,9 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner]
 ## Example 
 ./bin/shaderc_poll-1.0.1_x86d '~/git/shader_poll/shaderc/bin/glslc' './test/test_input' './test/test_output' -errors -warnings -ms=250 -recursive -cpd=on -colors -mt -force -- --target-env=vulkan1.2
 
-## Note
-Included ```sp.bat``` and ```sp.sh``` files that you can modify to easily run shader_poll with one click.
-
-## Platforms
-* Windows 10
-* Linux
-
 ## Installation.
-* Install shaderc somewhere.
-  * Compile from git, or just install the binaries.
+* Install shaderc
 * Install cmake if you don't have it.
-  * Linux: apt install cmake.
-  * Windows: download from cmake website.
 * Compile shader_poll with ```cmake --build```
 
 ## Dependencies

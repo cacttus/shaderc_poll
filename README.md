@@ -34,7 +34,7 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] [-err
 | --ex**=** |  _Custom file extensions (syntax: -exg=.gs -exv=.vs)_ (see below) | 
 | -- | Additional commands sent to shaderc... e.g. -- --target-env=vulkan1.2, --target-env=opengl4.5, etc. Must come last. | 
 
-### Custom Shader Type Extensions
+#### Custom Shader Type Extensions
 | Command | Desciption |
 | :---: | :---: |
 | -exg | Geometry shader extension (default .gs). |

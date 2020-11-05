@@ -15,26 +15,31 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] [-err
 | output_dir | directory of output files | 
 
 ### Optional arguments
--ms - Milliseconds between polls. (default 250ms).
--mt - multithreaded compilation (default false).
--nobanner - hide the banner.
--errors - Emit errors only.
--warnings Emit errors & warnings (default).
--woff - Do not emit errors and warnings.
--colors - Colored output (default off).
--recursive - Search ```input_dir``` recursively. Dump SPIRV in ```output_dir.```
--showcmd - Print the shaderc compile command (default false).
--force - Force recompilation of all files upon start. (default false).
--cpd=[on|off]- Match folder layout of ```input_dir```. Subfolders in ```output_dir``` will match the subfolders in ```input_dir```. ```shader_poll``` will create new folders as necessary. If disabled files may be overwritten. (default on).
--outext - Output file extension. (default .spv).
--ex**=** _Custom file extensions (syntax: -exg=.gs -exv=.vs)_
-* -exg - geometry shader extension (default .gs).
-* -exv - vertex shader extension (default .vs).
-* -exf - fragment shader extension (default .fs).
-* -extc - tessellation control shader extension (default .tcs).
-* -exte - tessellation eval shader extension (default .tes).
-* -exc - compute eval shader extension (default .cs).
--- - additional commands sent to shaderc... e.g. -- --target-env=vulkan1.2, --target-env=opengl4.5, etc.
+| Command | Desciption |
+| :---: | :---: | 
+| -ms | Milliseconds between polls. (default 250ms). | 
+| -mt | multithreaded compilation (default false). | 
+| -nobanner | hide the banner. | 
+| -errors | Emit errors only. | 
+| -warnings |  Emit errors & warnings (default). | 
+| -woff |  Do not emit errors and warnings. | 
+| -colors |  Colored output (default off). | 
+| -recursive |  Search ```input_dir``` recursively. Dump SPIRV in ```output_dir.``` | 
+| -showcmd |  Print the shaderc compile command (default false). | 
+| -force |  Force recompilation of all files upon start. (default false). | 
+| -cpd=[on|off] |  Match folder layout of ```input_dir```. Subfolders in ```output_dir``` will match the subfolders in ```input_dir```. ```shader_poll``` will create new folders as necessary. If disabled files may be overwritten. (default on). | 
+| --ex**=** |  _Custom file extensions (syntax: -exg=.gs -exv=.vs)_ (see below) | 
+| -- | Additional commands sent to shaderc... e.g. -- --target-env=vulkan1.2, --target-env=opengl4.5, etc. | 
+
+### Optional arguments
+| Command | Desciption |
+| :---: | :---: |
+| -exg | Geometry shader extension (default .gs). |
+| -exv | Vertex shader extension (default .vs). |
+| -exf | Fragment shader extension (default .fs). |
+| -extc | Tessellation control shader extension (default .tcs). |
+| -exte | Tessellation eval shader extension (default .tes). |
+| -exc | Compute eval shader extension (default .cs). |
 
 ## Example 
 ./bin/shaderc_poll-1.0.1_x86d '~/git/shader_poll/shaderc/bin/glslc' './test/test_input' './test/test_output' -errors -warnings -ms=250 -recursive -cpd=on -colors -mt -force -- --target-env=vulkan1.2

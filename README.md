@@ -11,8 +11,8 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] [-err
 | Command | Desciption |
 | :---: | :---: | 
 | shaderc_path | path to shaderc | 
-| input_dir | directory of input files | 
-| output_dir | directory of output files | 
+| input_dir | input file root directory | 
+| output_dir | output file root directory | 
 
 ### Optional arguments
 | Command | Desciption |
@@ -27,7 +27,7 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] [-err
 | -recursive |  Search ```input_dir``` recursively. Dump SPIRV in ```output_dir.``` | 
 | -showcmd |  Print the shaderc compile command (default false). | 
 | -force |  Force recompilation of all files upon start. (default false). | 
-| -cpd=(on/off) |  Match folder layout of ```input_dir```. Subfolders in ```output_dir``` will match the subfolders in ```input_dir```. ```shader_poll``` will create new folders as necessary. If disabled files may be overwritten. (default on). | 
+| -cpd=on/off |  Match folder layout of ```input_dir```. Subfolders in ```output_dir``` will match the subfolders in ```input_dir```. ```shader_poll``` will create new folders as necessary. If disabled files may be overwritten. (default on). | 
 | --ex**=** |  _Custom file extensions (syntax: -exg=.gs -exv=.vs)_ (see below) | 
 | -- | Additional commands sent to shaderc... e.g. -- --target-env=vulkan1.2, --target-env=opengl4.5, etc. Must come last. | 
 

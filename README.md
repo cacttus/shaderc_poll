@@ -55,7 +55,7 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner]
 * Compile shader_poll with ```cmake --build```
 
 ## Dependencies
-* (Shaderc (by Google))[https://github.com/google/shaderc]
+* [Shaderc (Google)](https://github.com/google/shaderc)
 * CMake
 
 ## Future Additions

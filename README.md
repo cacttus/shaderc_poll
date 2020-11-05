@@ -7,9 +7,12 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner] [-err
 ```
 
 ### Arguments
-shaderc_path - path to shaderc
-input_dir - directory of input files
-output_dir - directory of output files
+
+| Command | Desciption |
+| :---: | :---: | 
+| shaderc_path | path to shaderc | 
+| input_dir | directory of input files | 
+| output_dir | directory of output files | 
 
 ### Optional arguments
 -ms - Milliseconds between polls. (default 250ms).

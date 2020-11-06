@@ -8,13 +8,6 @@ namespace SCP {
 #pragma region ShaderCPoll
 
 ShaderCPoll::ShaderCPoll() {
-  /*
-    what they smokin?
-  -fshader-stage=<stage>
-                    Treat subsequent input files as having stage <stage>.
-                    Valid stages are vertex, vert, fragment, frag, tesscontrol,
-                    tesc, tesseval, tese, geometry, geom, compute, and comp.
-  */
   _extensions.push_back(std::make_shared<ShaderTypeExt>(ShaderType::Geometry, ".gs", "geometry", "-exg"));
   _extensions.push_back(std::make_shared<ShaderTypeExt>(ShaderType::Vertex, ".vs", "vertex", "-exv"));
   _extensions.push_back(std::make_shared<ShaderTypeExt>(ShaderType::Fragment, ".fs", "fragment", "-exf"));

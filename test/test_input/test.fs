@@ -8,12 +8,12 @@ layout(location = 3) in vec3 _vPositionVS;
 layout(location = 4) in vec3 _vCamPosVS;
 
 layout(location = 0) out vec4 _outFBO_DefaultColor;
-
-layout(binding = 2) uniform sampler2D _ufTexture0;
+  
+layout(binding = 2) uniform sampler2D _ufTexture0; 
 
 struct GPULight {
     vec3 pos;
-    float radius;
+    float radius;  
     vec3 color;
     float rotation;
     vec3 specColor;

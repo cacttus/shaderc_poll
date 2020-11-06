@@ -15,9 +15,7 @@
     {
       "name": "Win32",
       "includePath": [
-        "${workspaceFolder}/src",
-        "${workspaceFolder}/ext/SDL2-2.0.12/include",
-        "${workspaceFolder}/ext/SDL2_net-2.0.1/include"
+        "${workspaceFolder}/src"
       ],
       "defines": [],
       "cStandard": "c11",

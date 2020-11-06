@@ -72,38 +72,29 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Packages
 find_package(Threads REQUIRED) #This is better than -pthread
 
-#set(OpenGL_GL_PREFERENCE LEGACY) #GLVND or LEGACY
-#find_package(OpenGL REQUIRED)
-#find_package(SDL2 REQUIRED)
-#find_package(Vulkan REQUIRED)  
-
 if(UNIX)
 find_package(X11 REQUIRED)
 endif()
  
 # Includes
-#target_include_directories(${PROJECT_NAME} PUBLIC )
-
-
 # Libraries
 set(ADDL_LIBS "")
 if(WIN32)
   set(SCP_WIN32_COMPILE_OPTS "")
 
   #Unicode required for building with Unicode Character Set (vs MBCS)
-  string(APPEND SCP_WIN32_COMPILE_OPTS " -DUNICODE")
-  string(APPEND SCP_WIN32_COMPILE_OPTS " -D_UNICODE")
+  string(APPEND CMAKE_CXX_FLAGS " -DUNICODE")
+  string(APPEND CMAKE_CXX_FLAGS " -D_UNICODE")
 
   #Suppress error
-  string(APPEND SCP_WIN32_COMPILE_OPTS " -D_CRT_NO_VA_START_VALIDATION")
+  string(APPEND CMAKE_CXX_FLAGS " -D_CRT_NO_VA_START_VALIDATION")
 
   #Multicore build
-  string(APPEND SCP_WIN32_COMPILE_OPTS /MP) #NOte: originally CMAKE_CXX_FLAGS
+  string(APPEND CMAKE_CXX_FLAGS " /MP") #NOte: originally CMAKE_CXX_FLAGS
 
   target_compile_options(${SCP_TARGET_NAME} PRIVATE "$<$<CONFIG:RELEASE>:" ${SCP_WIN32_COMPILE_OPTS})
   target_compile_options(${SCP_TARGET_NAME} PRIVATE "$<$<CONFIG:DEBUG>:" ${SCP_WIN32_COMPILE_OPTS} -D_DEBUG -D_GLIBCXX_DEBUG)
  
-  find_package(SDL2_net REQUIRED)
   #TODO: test/ remove these
   set(SCP_ADDL_LIBS "ws2_32.lib" "winmm.lib" "imm32.lib" "version.lib" "dbghelp.lib" "setupapi.lib" "iphlpapi.lib")
 elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
@@ -115,12 +106,7 @@ set(SCP_GCC_LINK_GLOBAL -pthread)
   target_link_options(${SCP_TARGET_NAME} PRIVATE "$<$<CONFIG:RELEASE>:" ${SCP_GCC_LINK_GLOBAL} ">")
   target_link_options(${SCP_TARGET_NAME} PRIVATE "$<$<CONFIG:DEBUG>:" ${SCP_GCC_LINK_GLOBAL} ">")
    
-  #set(VULKAN_LIBRARIES vulkan)
-  #set(SDLNET_LIBRARIES SDL2_net) 
   set(SCP_ADDL_LIBS ncurses)
 endif() 
 target_link_directories(${PROJECT_NAME} PRIVATE ${SCP_LIB_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} 
-${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${SCP_ADDL_LIBS} ${X11_LIBRARIES} ${LUA_LIBRARIES}
-
-)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SCP_ADDL_LIBS})

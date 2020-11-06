@@ -5,7 +5,7 @@ layout(location = 0) in vec3 _v301;
 layout(location = 1) in vec4 _c401;
 layout(location = 2) in vec2 _x201;
 layout(location = 3) in vec3 _n301;
-
+  
 layout(location = 0) out vec4 _vColorVS;
 layout(location = 1) out vec2 _vTexcoordVS;
 layout(location = 2) out vec3 _vNormalVS;
@@ -17,7 +17,7 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 proj;
     vec3 camPos;
     float pad;
-} _uboViewProj;
+} _uboViewProj; 
 
 struct InstanceData {
     mat4 model;

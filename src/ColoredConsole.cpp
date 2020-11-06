@@ -1,4 +1,3 @@
-
 #include "./ShaderCPollHeader.h"
 #include "./ColoredConsole.h"
 #include "./Utils.h"

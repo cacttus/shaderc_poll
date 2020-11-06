@@ -15,6 +15,8 @@
 #include <unordered_map>
 #include <map>
 
+#include "ColoredConsole.h"
+
 #define OS_NOT_SUPPORTED_ERROR error "Operating system not supported"
 
 /////////////////////////////////////////////////////////////////////////
@@ -47,6 +49,10 @@
 #include <signal.h>
 #endif
 
+#ifdef BR2_OS_WINDOWS
+#include <Windows.h>
+#endif
+
 #define AThrow(x) \
   if (!(x)) { Utils::throwException("Assertion failed: " + std::string(#x)); }
 
@@ -77,8 +83,8 @@ enum class ShaderType {
   Mesh_NV,
   Compute
 };
-struct ShaderTypeExt;
-struct ShaderFile;
+class ShaderTypeExt;
+class ShaderFile;
 class ShaderCPoll;
 class Utils;
 
@@ -114,6 +120,12 @@ public:
     _shadercVar = shadercvar;
     _flag = flag;
   }
+};
+
+class OutputLine {
+public:
+  string_t _msg;
+  ColoredConsole::Color _color;
 };
 
 }  // namespace SCP

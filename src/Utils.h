@@ -10,16 +10,29 @@
 
 namespace SCP {
 
+class Stopwatch {
+public:
+  void start();
+  void end();
+  string_t time();
+
+private:
+//  auto start_t = std::chrono::high_resolution_clock::now();
+  std::chrono::high_resolution_clock::time_point start_t;
+  std::chrono::high_resolution_clock::time_point end_t;
+};
+
 class Utils {
 public:
+  static std::thread::id _mainThreadId;  //default construct must not represent a thread.
   static string_t _exeLocation;
-  static void logError(const string_t&);
-  static void logWarn(const string_t&);
-  static void logInfo(const string_t&);
+  static void log(const string_t&, std::vector<OutputLine>* out, ColoredConsole::Color color);
+  static void logError(const string_t&, std::vector<OutputLine>* out = nullptr, bool color = true);
+  static void logWarn(const string_t&, std::vector<OutputLine>* out = nullptr, bool color = true);
+  static void logInfo(const string_t&, std::vector<OutputLine>* out = nullptr, bool color = true);
   static string_t getDate();
   static bool equals(const string_t& a, const string_t& b);
   static bool beginsWith(const string_t& search_str, const string_t& prefix);
-  static string_t getEnvironmentVariable(const string_t& var);
   static void debugBreak();
   static string_t stripQuotes(const string_t& s);
   static bool fileExists(const string_t& filename);
@@ -43,6 +56,10 @@ public:
   static string_t getFilePartOfFileName(const string_t& fileName);
   static void findFile(FileInfo& inf, const string_t& search_root);
   static void split(const string_t& in, const std::vector<char>& dels, std::vector<string_t>& ret);
+  static string_t trim(const string_t& astr, char trimch);
+  static string_t trimBeg(const string_t& astr, char trimch);
+  static string_t trimEnd(const string_t& astr, char trimch);
+  static string_t enquote(const string_t& instr);
 };
 
 }  // namespace SCP

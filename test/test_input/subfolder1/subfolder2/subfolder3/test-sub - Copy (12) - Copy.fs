@@ -1,4 +1,4 @@
-#version 450
+#version 150
 #extension GL_ARB_separate_shader_objects : enable
 
 layout(location = 0) in vec4 _vColorVS;
@@ -30,6 +30,7 @@ layout(binding = 3) uniform Lights {
 //3 SPIRV-Reflect doesn't like using a GPU struct but GLSLC compiles it.
 
 void main() {  
+  dvec3 d = dvec3(5,5,5);
    vec4 texcolor = texture(_ufTexture0, _vTexcoordVS);
    vec3 lightDiffuseRGB = vec3(0,0,0);
    vec3 lightSpecRGB = vec3(0,0,0);

@@ -1,5 +1,7 @@
 #include "./Utils.h"
 #include <algorithm>
+#include <thread>
+#include <sstream>
 
 #if defined(BR2_CPP17)
 #include <filesystem>
@@ -30,7 +32,57 @@
 
 namespace SCP {
 
+#pragma region Stopwatch
+
+void Stopwatch::start() {
+  start_t = std::chrono::high_resolution_clock::now();
+}
+void Stopwatch::end() {
+  end_t = std::chrono::high_resolution_clock::now();
+}
+string_t Stopwatch::time() {
+  auto diff_t = std::chrono::duration_cast<std::chrono::microseconds>(end_t - start_t);
+  double span_t = diff_t.count();
+
+  string_t unit = "us";
+  //Auto convert from us -> ms -> s based on sigfigs
+  if (span_t > 1000) {
+    span_t /= 1000.0;
+    unit = "ms";
+    if (span_t > 1000) {
+      span_t /= 1000.0;
+      unit = "s";
+      if (span_t > 60) {
+        span_t /= 60.0;
+        unit = "m";
+        if (span_t > 60) {
+          span_t /= 60.0;
+          unit = "h";
+          if (span_t > 24) {
+            span_t /= 24.0;
+            unit = "d";
+          }
+        }
+      }
+    }
+  }
+
+  std::ostringstream outss;
+  int precision = 1;
+  outss.precision((std::streamsize)1);
+  outss << std::fixed << span_t;
+  string_t end_t_sz = outss.str();
+  string_t out = Stz end_t_sz + unit;
+  return out;
+}
+
+#pragma endregion
+
+#pragma region Utils
+
+std::thread::id Utils::_mainThreadId;  //There is no ctor for thread::id
 std::string Utils::_exeLocation = "";
+
 void Utils::throwException(const string_t& ex) {
   string_t st = Stz + "Exception: " + ex;
   throw std::invalid_argument(st.c_str());
@@ -49,14 +101,28 @@ string_t Utils::getDate() {
 
   return ret;
 }
-void Utils::logError(const string_t& s) {
-  std::cout << "[" + Utils::getDate() + "][E]:" << s << std::endl;
+void Utils::log(const string_t& s, std::vector<OutputLine>* out, ColoredConsole::Color color) {
+  if (out == nullptr) {
+    if (std::this_thread::get_id() != Utils::_mainThreadId) {
+      Utils::throwException("Attempted to call log from a shader task without specifying output.");
+    }
+    ColoredConsole::print(s, color);
+  }
+  else {
+    out->push_back(OutputLine{ s, color });
+  }
 }
-void Utils::logWarn(const string_t& s) {
-  std::cout << "[" + Utils::getDate() + "][W]:" << s << std::endl;
+void Utils::logError(const string_t& s, std::vector<OutputLine>* out, bool color) {
+  std::string sb = "[" + Utils::getDate() + "][E]:" + s + "\n";
+  Utils::log(sb, out, color ? ColoredConsole::Color::FG_RED : ColoredConsole::Color::FG_GRAY);
 }
-void Utils::logInfo(const string_t& s) {
-  std::cout << "[" + Utils::getDate() + "][I]:" << s << std::endl;
+void Utils::logWarn(const string_t& s, std::vector<OutputLine>* out, bool color) {
+  std::string sb = "[" + Utils::getDate() + "][W]:" + s + "\n";
+  Utils::log(sb, out, color ? ColoredConsole::Color::FG_YELLOW : ColoredConsole::Color::FG_GRAY);
+}
+void Utils::logInfo(const string_t& s, std::vector<OutputLine>* out, bool color) {
+  std::string sb = "[" + Utils::getDate() + "][I]:" + s + "\n";
+  Utils::log(sb, out, color ? ColoredConsole::Color::FG_CYAN : ColoredConsole::Color::FG_GRAY);
 }
 bool Utils::equals(const string_t& a, const string_t& b) {
   bool br = (a.compare(b) == 0);
@@ -64,36 +130,6 @@ bool Utils::equals(const string_t& a, const string_t& b) {
 }
 bool Utils::beginsWith(const string_t& search_str, const string_t& prefix) {
   bool ret = (search_str.rfind(prefix, 0) == 0);
-  return ret;
-}
-string_t Utils::getEnvironmentVariable(const string_t& var) {
-  //Get a Windows/Linux environment variable.
-  string_t ret = "";
-#if defined(BR2_OS_WINDOWS)
-  wchar_t buf[1024];
-  std::memset(buf, 0, 1024);
-
-  std::wstring wvar = StringUtil::strToWStr(var);
-
-  DWORD retdw = GetEnvironmentVariable(wvar.c_str(), buf, 1024);
-  if (retdw != 0) {
-    ret = StringUtil::wStrToStr(std::wstring(buf));
-  }
-  else {
-    BRLogError("Could not get environment variable" + var);
-  }
-
-#elif defined(BR2_OS_LINUX)
-  const char* val = std::getenv(var.c_str());
-  if (val == nullptr) {  // invalid to assign nullptr to std::string
-    ret = "";
-  }
-  else {
-    ret = string_t(val);
-  }
-#else
-  OS_METHOD_NOT_IMPLEMENTED
-#endif
   return ret;
 }
 void Utils::debugBreak() {
@@ -157,13 +193,21 @@ bool Utils::directoryExists(const string_t& dirName) {
 string_t Utils::executeReadOutput(const string_t& cmd) {
   string_t data = "";
 #if defined(BR2_OS_LINUX)
+#define POPEN_OS popen
+#define PCLOSE_OS pclose
+#elif defined(BR2_OS_WINDOWS)
+#define POPEN_OS _popen
+#define PCLOSE_OS _pclose
+#endif
+
+  //#if defined(BR2_OS_LINUX)
   //This works only if VSCode launches the proper terminal (some voodoo back there);
   const int MAX_BUFFER = 256;
   char buffer[MAX_BUFFER];
   memset(buffer, 0, MAX_BUFFER);
   string_t cmd_mod = Stz cmd + " 2>&1";  //redirect stderr to stdout
 
-  FILE* stream = popen(cmd_mod.c_str(), "r");
+  FILE* stream = POPEN_OS(cmd_mod.c_str(), "r");
   if (stream) {
     while (fgets(buffer, MAX_BUFFER, stream) != NULL) {
       data.append(buffer);
@@ -172,12 +216,23 @@ string_t Utils::executeReadOutput(const string_t& cmd) {
       std::cout << "Error executeReadOutput() " << std::endl;
     }
     clearerr(stream);
-    pclose(stream);
+    PCLOSE_OS(stream);
   }
-#else
-  BRLogWarn("Tried to call invalid method on non-linux platform.");
-  //Do nothing
-#endif
+  //#else
+  //  int r = system(cmd.c_str());
+  //
+  //      std::array<char, 128> buffer;
+  //  std::string result;
+  //  std::unique_ptr<FILE, decltype(&pclose)> pipe(_popen(cmd, "r"), pclose);
+  //  if (!pipe) {
+  //    throw std::runtime_error("popen() failed!");
+  //  }
+  //  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+  //    result += buffer.data();
+  //  }
+  //  return result;
+  //
+  //#endif
   return data;
 }
 bool Utils::createDirectoryRecursive(const string_t& dirName) {
@@ -278,34 +333,34 @@ bool Utils::getAllFiles(const string_t& dir, std::vector<string_t>& files) {
   return getAllFilesOrDirs(dir, files, true);
 }
 string_t Utils::combinePath(const std::string& a, const std::string& b) {
-#if defined(BR2_CPP17)
-  //Combining paths on Linux doesn't actually treat the RHS as a path or file if there's no /
-  std::string bfmt;
-  if (b.length() && ((b[0] != '\\') && (b[0] != '/'))) {
-    bfmt = std::string("/") + b;
-  }
-  else {
-    bfmt = b;
-  }
-  std::filesystem::path pa(a);
-  std::filesystem::path pc = pa.concat(bfmt);
-  string_t st = pc.string();
-  return st;
-#else
+  //#if defined(BR2_CPP17)
+  //  //Combining paths on Linux doesn't actually treat the RHS as a path or file if there's no /
+  //  std::string bfmt;
+  //  if (b.length() && ((b[0] != '\\') && (b[0] != '/'))) {
+  //    bfmt = std::string("/") + b;
+  //  }
+  //  else {
+  //    bfmt = b;
+  //  }
+  //  std::filesystem::path pa(a);
+  //  std::filesystem::path pc = pa.concat(bfmt);
+  //  string_t st = pc.string();
+  //  return st;
+  //#else
   if ((a.length() == 0) || (b.length() == 0)) {
     return a + b;
   }
 
   // - Make sure path is a / path not a \\ path
-  a = formatPath(a);
-  b = formatPath(b);
+  auto a2 = formatPath(a);
+  auto b2 = formatPath(b);
 
   // Remove / from before and after strings
-  a = StringUtil::trim(a, '/');
-  b = StringUtil::trim(b, '/');
+  a2 = Utils::trim(a2, '/');
+  b2 = Utils::trim(b2, '/');
 
-  return a + string_t("/") + b;
-#endif
+  return a2 + string_t("/") + b2;
+  //#endif
 }
 string_t Utils::getExtensionPartOfFileName(const string_t& name) {
   // 2017 12 22 - **Changed this to return the DOT just like .NET ( .exe, .dat
@@ -456,5 +511,32 @@ void Utils::split(const string_t& in, const std::vector<char>& dels, std::vector
     ret.push_back(tbuf);
   }
 }
+string_t Utils::trim(const string_t& astr, char trimch) {
+  string_t str = astr;
+  str = trimBeg(str, trimch);
+  str = trimEnd(str, trimch);
+  return str;
+}
+string_t Utils::trimBeg(const string_t& astr, char trimch) {
+  string_t str = astr;
+  while (str.length() && str.at(0) == trimch) {
+    str = str.substr(1, str.length() - 1);
+  }
+  return str;
+}
+string_t Utils::trimEnd(const string_t& astr, char trimch) {
+  string_t str = astr;
+  while (str.length() && str.at(str.length() - 1) == trimch) {
+    str = str.substr(0, str.length() - 1);
+  }
+  return str;
+}
+string_t Utils::enquote(const string_t& instr) {
+  string_t outst = instr;
+  outst = "\"" + outst + "\"";
+  return outst;
+}
+
+#pragma endregion
 
 }  // namespace SCP

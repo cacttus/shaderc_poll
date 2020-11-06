@@ -6,7 +6,7 @@
 using namespace SCP;
 
 int main(int argc, char** argv) {
-  ShaderCPoll p;
+  std::shared_ptr<ShaderCPoll> p = std::make_shared<ShaderCPoll>();
 
   try {
     Utils::_exeLocation = argv[0];
@@ -14,20 +14,20 @@ int main(int argc, char** argv) {
     for (auto i = 1; i < argc; ++i) {
       args.push_back(std::string(argv[i]));
     }
-    p.init(args);
+    p->init(args);
   }
   catch (std::exception& ex) {
     Utils::logError(Stz "Exception: " + ex.what());
   }
 
   try {
-    p.run();
+    p->run();
   }
   catch (std::exception& ex) {
     Utils::logError(Stz "Error: " + ex.what());
+    std::cin.get(); 
   }
 
-  //std::cin.get(); 
 
   return 0;
 }

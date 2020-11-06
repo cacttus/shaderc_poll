@@ -88,13 +88,13 @@ private:
   string_t _shaderc_path;
   string_t _additionalShaderCArgs;
   string_t _outputExt = ".spv";
-  bool _colors = true;
   int32_t _sleepMS = 250;
   OutputMode _outputMode = OutputMode::ErrorsAndWarnings;
   //RecursiveMode _recursiveMode = RecursiveMode::Off;
-  bool _recursive = false;
   std::vector<std::shared_ptr<ShaderTypeExt>> _extensions;
+  bool _colors = true;
   bool _copyFolderStructure = true;
+  bool _recursive = false;
   bool _force = false;
   bool _showcmd = false;
   bool _threaded = false;

@@ -23,7 +23,7 @@ shaderc_poll shaderc_path input_dir output_dir [-ms=500] [-mt] [-nobanner]
 | Command | Desciption |
 | :---: | :---: | 
 | -ms | Milliseconds between polls. (default 250ms). | 
-| -threaded=on/off | multithreaded compilation (default on). | 
+| -threaded=on/off | multithreade66d compilation (default on). | 
 | -batchsize=* | Batch size for multithreaded compilation (default 50). | 
 | -force |  Force compilation of all files at start. (default false). | 
 | -banner=on/off | Show/hide the banner. (default off) | 

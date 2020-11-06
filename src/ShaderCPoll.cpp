@@ -75,9 +75,7 @@ void ShaderCPoll::init(std::vector<std::string>& args) {
       _colors = false;
     }
     else if (Utils::equals(arg, "-colors")) {
-      if (recursive_mode_set) {
-        Utils::throwException("-colors requires -colors=on or -colors=off (no spaces)");
-      }
+      Utils::throwException("-colors requires -colors=on or -colors=off (no spaces)");
     }
     else if (Utils::equals(arg, "-showcmd=on")) {
       _showcmd = true;
@@ -86,9 +84,7 @@ void ShaderCPoll::init(std::vector<std::string>& args) {
       _showcmd = false;
     }
     else if (Utils::equals(arg, "-showcmd")) {
-      if (recursive_mode_set) {
-        Utils::throwException("-showcmd requires -showcmd=on or -showcmd=off (no spaces)");
-      }
+      Utils::throwException("-showcmd requires -showcmd=on or -showcmd=off (no spaces)");
     }
     else if (Utils::equals(arg, "-woff")) {
       if (output_mode_set) {
@@ -118,9 +114,7 @@ void ShaderCPoll::init(std::vector<std::string>& args) {
       _copyFolderStructure = false;
     }
     else if (Utils::equals(arg, "-copydirs")) {
-      if (recursive_mode_set) {
-        Utils::throwException("-copydirs requires -copydirs=on or -copydirs=off (no spaces)");
-      }
+      Utils::throwException("-copydirs requires -copydirs=on or -copydirs=off (no spaces)");
     }
     else if (Utils::equals(arg, "-stats=on")) {
       _printStats = true;
@@ -129,16 +123,12 @@ void ShaderCPoll::init(std::vector<std::string>& args) {
       _printStats = false;
     }
     else if (Utils::equals(arg, "-stats")) {
-      if (recursive_mode_set) {
-        Utils::throwException("-stats requires -stats=on or -stats=off (no spaces)");
-      }
+      Utils::throwException("-stats requires -stats=on or -stats=off (no spaces)");
     }
     else if (Utils::equals(arg, c_mkod_cmd)) {
-      if (recursive_mode_set) {
-        Utils::throwException(Stz c_mkod_cmd + " requires =on or =off (no spaces)");
-      }
+      Utils::throwException(Stz c_mkod_cmd + " requires =on or =off (no spaces)");
     }
-    else if (Utils::equals(arg, c_mkod_cmd+std::string("=on"))) {
+    else if (Utils::equals(arg, c_mkod_cmd + std::string("=on"))) {
       _makeOutputDir = true;
     }
     else if (Utils::equals(arg, c_mkod_cmd + std::string("=off"))) {
@@ -154,9 +144,7 @@ void ShaderCPoll::init(std::vector<std::string>& args) {
       _nobanner = true;
     }
     else if (Utils::equals(arg, "-banner")) {
-      if (recursive_mode_set) {
-        Utils::throwException("-banner requires -banner=on or -banner=off (no spaces)");
-      }
+      Utils::throwException("-banner requires -banner=on or -banner=off (no spaces)");
     }
     else if (Utils::equals(arg, "-recursive")) {
       if (recursive_mode_set) {
@@ -172,9 +160,7 @@ void ShaderCPoll::init(std::vector<std::string>& args) {
       _threaded = false;
     }
     else if (Utils::equals(arg, "-threaded")) {
-      if (recursive_mode_set) {
-        Utils::throwException("-threaded requires -threaded=on or -threaded=off (no spaces)");
-      }
+      Utils::throwException("-threaded requires -threaded=on or -threaded=off (no spaces)");
     }
     else if (Utils::beginsWith(arg, "-batchsize")) {
       string_t val = parseArg(arg);
@@ -504,7 +490,7 @@ string_t ShaderCPollTask::createCommand(const string_t& out_file) {
 
   launch = Stz "start \"shaderc_start\" /D\"" + curd + "\" /HIGH /B  " + Utils::enquote(sc_path) + " ";
 #elif defined(BR2_OS_LINUX)
-  launch = _shaderc_path + " ";
+  launch = _shaderCPoll->shaderc_path() + " ";
 #endif
 
   string_t command = launch + _shaderCPoll->additionalShaderCArgs() +

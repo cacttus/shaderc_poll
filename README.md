@@ -1,5 +1,7 @@
 # shaderc_poll
-Compile shader files and poll for changes. Continuous integration shader compiler.
+Poll shader files for changes, compile them, output errors and warnings. 
+
+Continuous integration shader compiler.
 
 (This could, of course, be done with a simple sh script as well.)
 
